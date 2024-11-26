@@ -1,4 +1,4 @@
-bm1piConversion
+#bm1piConversion
 Conversion of numbers from decimal base into complex base and vice versa. This repository contains the complete materials for the project, including the written report, implementation, and presentation slides. It is structured as follows:
 
 Ausarbeitung/Ausarbeitung.pdf: The final PDF of the written report.
