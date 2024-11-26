@@ -1,0 +1,430 @@
+% Diese Zeile bitte -nicht- aendern.
+\documentclass[course=erap]{aspdoc}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{automata,positioning}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DONE: Ersetzen Sie in den folgenden Zeilen die entsprechenden -Texte-
+%% mit den richtigen Werten.
+\newcommand{\theGroup}{251} % Beispiel: 42
+\newcommand{\theNumber}{A319} % Beispiel: A123
+\author{Alireza Kamalidehghan \and Sina Mozaffari Tabar \and Mostafa Nejati Hatamian}
+\date{Sommersemester 2023} % Beispiel: Wintersemester 2019/20
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Diese Zeile bitte -nicht- aendern.
+\title{Gruppe \theGroup{} -- Abgabe zu Aufgabe \theNumber}
+
+\begin{document}
+
+    \maketitle
+
+
+    \section{Arithmetik in Zahlensystemen mit ungewöhnlicher Basis}
+
+    \subsection{Überblick}
+    Die Arithmetik ist eine fundamentale Disziplin der Mathematik, die sich mit den Grundoperationen wie Addition, Subtraktion, Multiplikation und Division befasst.
+    Normalerweise sind wir es gewohnt, diese Operationen in unserem alltäglichen Leben in einem dezimalen Zahlensystem durchzuführen, wobei die Basis 10 beträgt.
+    \newline
+    Darüber hinaus bilden die Basen 2 und 16 Zahlensysteme, die in der Informatik und Mathematik häufig verwendet werden.
+    Jedes Zahlensystem basiert auf einer bestimmten Anzahl von Symbolen, um Zahlen darzustellen.
+    Hier eine Erklärung, wofür wir die Basen 2 und 16 im Allgemeinen brauchen:
+    \newline
+    \newline
+    Basis 2 (Binärsystem):
+    Das Binärsystem verwendet nur zwei Symbole, normalerweise 0 und 1.
+    Es ist das grundlegendste Zahlensystem in der digitalen Welt, da Transistoren sich auf zwei Zuständen befinden können: ausgeschaltet (0) und eingeschaltet (1).
+    \newline
+    \newline
+    Basis 16 (Hexadezimalsystem):
+    Das Hexadezimalsystem verwendet 16 Symbole: die Zahlen 0-9 und die Buchstaben A-F. Es bietet eine kompaktere Darstellung großer Binärzahlen und erleichtert die Lesbarkeit und Handhabung von Zahlen.
+    \newline
+    \par
+    Die g-adische Schreibweise, die eine allgemeine Repräsentation von Zahlen in anderen Zahlensystemen in arabische Zahlschrift darstellt, ist wie folgt:
+
+    \begin{equation}
+        \label{sumFormel}
+        A = \sum_{i=0} ^{n-1} a_i * g^i
+    \end{equation}
+
+
+    In dieser Formel steht A für die resultierende Zahl, n für die Anzahl der Stellen von A, $g$ für die Basis und $a_i$ für die i-te Ziffer der ursprünglichen Zahl.
+    \newline
+
+    Um ein besseres Verständnis zu bekommen, gehen wir jetzt ein Beispiel näher ein.
+    Betrachten wir uns die Zahl $101011$\space in Binärsystem, kann man mit der oben genannten Formel diese Zahl in Dezimalsystem umwandeln:
+
+    \[1* 2^0 + 1*2^1 + 0* 2^2 + 1* 2^3 + 0* 2^4 + 1* 2^5 = 1+2+8+32 = 43 \]
+    \newpage
+    Doch was passiert, wenn wir die Basis auf ungewöhnliche Werte setzen?
+    Nimmt man beispielsweise die Basis $g = -1 + i$, wobei \textit{i} die imaginäre Einheit ist.
+    In diesem Fall können komplexe Zahlen mit ganzzahligen Real und Imaginärteilen dargestellt werden, selbst wenn man die Ziffern auf die Menge \{0, 1\} beschränkt.
+    Die Basen $ -1 \pm i $ mit den Ziffern 0 und 1 wurde 1964 von S. Khmelnik und 1965 von Walter F. Penney vorgeschlagen.
+
+    In diesem Projekt werden wir uns näher mit der Arithmetik in Zahlensystemen mit einer komplexen Basis befassen.
+
+    \subsection{Die Aufgabe}
+
+    Unsere Aufgabe besteht aus zwei Teilen, einem theoretischen und einem praktischen.
+
+    \subsubsection{Theoretischer Teil:}
+    In diesem Teil der Ausarbeitung untersuchen wir die Konversion von komplexen Zahlen zur Basis $(-1 + i)$ und entwickeln die entsprechenden Algorithmen.
+    Zunächst erklären wir, warum die Zahl $(3 + 2i)$ zur Basis $(-1 + i)$ die Darstellung $1001$ hat.
+    \newline
+    Darauf aufbauend leiten wir die Algorithmen zur Konversion in beide Richtungen ab.
+    Wir ziehen bei Bedarf geeignete Literaturquellen zu Rate, um unsere Argumentation zu unterstützen.
+    Des Weiteren zeigen wir, dass komplexe Zahlen $(a + bi)$ mit den Werten $a \in \{1, 0, -1\}$ und $b \in \{1, 0, -1\}$ zur Basis $(-1 + i)$ mit binären Koeffizienten dargestellt werden können.
+
+    \subsubsection{Praktischer Teil:}
+    Im praktischen Teil implementieren wir zwei Funktionen in unserem C-Code.
+    Die erste Funktion, \textit{to\_carthesian}, nimmt eine vom Benutzer spezifizierte Zahl (\textit{bm1pi}) entgegen, die Bits enthält, die eine Zahl in der Darstellung zur Basis $(-1 + i)$ repräsentieren.
+    Die Funktion wandelt diese Zahl in ihre kartesische Darstellung um und setzt den Realteil \textit{real} und den Imaginärteil \textit{imag}.
+    \newline
+    Die zweite Funktion, \textit{to\_bm1pi}, erhält eine komplexe Zahl in kartesischer Darstellung mit Realteil \textit{real} und Imaginärteil \textit{imag} und gibt einen Integer zurück, dessen Bits die Ziffern der Eingabezahl zur Basis $(-1 + i)$ darstellen.
+
+
+    \section{Lösungsansatz}
+
+    \subsection{Theoretischer Teil:}
+    Generell gilt, wenn man eine Zahl zu einer neuen Basis umwandeln will, teilt man die Zahl wiederholt durch die neue Basis und notiert die Reste.
+    Im Fall von der Basis $-1+i$ wissen wir, dass der Rest bei der Umwandlung einer gaußschen Zahl entweder 0 oder 1 ist.\cite{complex_base_conversion}
+    \newpage
+    Nimmt man eine Zahl $n + im$ und teilt sie durch die gewählte Basis:
+
+    \[\frac{{n + im}}{{-1 + i}} = \frac{{(n + im)(-1 - i)}}{2} = \frac{{m - n}}{2} - i\frac{{n + m}}{2}\]
+
+    Wenn sowohl n als auch m gerade oder beide ungerade sind, dann sind sowohl $m-n$ als auch $m+n$ gerade.
+    Das Ergebnis der Division ist eine gaußsche Zahl und der Rest ist 0.
+
+    Diese Formulierung berücksichtigt, dass der Zähler und der Nenner mit $-1-i$ (dem konjugierten Komplexen der Basis) multipliziert wurden und dass der Rest 0 ist.
+
+    \[\frac{{m - n}}{{2}} - i\frac{{n + m}}{2}\]
+
+    Wenn nur eines von n oder m gerade ist (das andere ungerade), kann man die folgende Version des Quotienten betrachten:
+
+    \[\frac{{n + im}}{{-1 + i}} = \frac{{m - n + 1}}{2} - i \frac{{n + m -1}}{2} - \frac{{1}}{2}(1 + i)\]
+
+    In diesem Fall ist das Ergebnis der Division die folgende gaußsche Zahl:
+
+    \[\frac{{m - n + 1}}{{2}} - i\frac{{n + m - 1}}{2}\]
+
+    und der Rest ist 1.
+    Es gilt:
+
+    \[(-1 +i) (\frac{m - n + 1}{2} - i \frac{n + m - 1}{2}) = n +im - 1\]
+    Man kann diese Vorgehensweise mit den resultierenden Zahlen wiederholen, bis die ursprüngliche Zahl aufgrund der wiederholten Divisionen durch 2 verschwindet und die Sequenz der Reste erhalten bleibt.
+    \newline
+
+    Wir werden jetzt den Algorithmus anhand der angegebenen Zahl $3 + 2i$ veranschaulichen:
+
+    Wenn
+    \[(m - n) - i(n+m)=(2-3) - i(2 + 3) = -1 - 5i\]
+
+    (siehe das zweite Spaltenpaar in der folgenden Tabelle) durch 2 teilbar wäre, würden sich die Werte im dritten Spaltenpaar unverändert wiederholen und der Rest wäre 0 (siehe Spalte \textit{REMAINDER}). Da $3 + 2 i$ jedoch nicht durch 2 teilbar ist, erfolgt eine Modifikation gemäß der oberen Formel:
+    \[(m - n + 1) - i(n + m - 1)= 0 - 4 i\]
+    und der Rest ist 1.
+    Das erste Spaltenpaar zeigt auf das Ergebnis der ersten Division.
+    (Die Division durch 2 wird jetzt durchgeführt).
+    Anschließend wird der oben beschriebene Schritt wiederholt, bis der entsprechende Wert im dritten Spaltenpaar (siehe Spalte \textit{MODIFIED}) $0 + i0$ enthält.
+    \\
+
+    \begin{table}[!ht]
+        \centering
+        \begin{tabular}{|c|c|cc|cc|c|}
+            \hline
+            & & \multicolumn{2}{c|}{\textbf{(DIVISION BY -1+i) * 2}} & \multicolumn{2}{c|}{\textbf{MODIFIED}}             &                  \\ \hline
+            \textbf{REAL} & \textbf{IMAG} & \multicolumn{1}{c|}{\textbf{REAL}} & \textbf{IMAG} & \multicolumn{1}{c|}{\textbf{REAL}} & \textbf{IMAG} & \textbf{REMAINDER} \\ \hline
+            3             & 2             & \multicolumn{1}{c|}{-1}            & -5            & \multicolumn{1}{c|}{0}             & -4            & 1                  \\ \hline
+            0             & -2            & \multicolumn{1}{c|}{-2}            & 2             & \multicolumn{1}{c|}{-2}            & 2             & 0                  \\ \hline
+            -1            & 1             & \multicolumn{1}{c|}{2}             & 0             & \multicolumn{1}{c|}{2}             & 0             & 0                  \\ \hline
+            1             & 0             & \multicolumn{1}{c|}{-1}            & -1            & \multicolumn{1}{c|}{0}             & 0             & 1                  \\ \hline
+        \end{tabular}
+    \end{table}
+
+    Endlich haben wir es geschafft!
+    Jetzt müssen wir nur noch die Restspalte (Remainder) einfach von unten nach oben nacheinander verfassen und dann erhalten wir die resultierende Zahl in der Basis $(-1+i)$.
+    \[(3 + 2i)_{10} = (1001)_{-1+i}\]
+    \newline
+    Um die Korrektheit von unserem Ergebnis zu überprüfen, können wir die oben genannten Formel(\ref{sumFormel}) zum Einsatz bringen, um unsere Zahl in Basis $(-1+i)$ wieder in Basis 10 zu konvertieren:
+    \begin{equation*}
+        \begin{split}
+        (1001)
+            _{-1+i} &= 1*(-1+i)^0 + 0*(-1+i)^1 + 0*(-1+i)^2 +1*(-1+i)^3 \\
+            &=1 + 0 + 0 + (2 + 2i) \\
+            &= (3+2i)_{10}
+        \end{split}
+    \end{equation*}
+
+    Für den zweiten Teil der Aufgabe können wir nochmal die Formel (\ref{sumFormel}) in Gebrauch nehmen, um es zu beweisen, dass die angeforderten Komplexe Zahlen zur Basis $(-1+i)$ mit binären Koeffizienten darstellbar sind.
+
+    \begin{enumerate}[label=\roman*) Falls]
+        \item a = -1, b = -1:
+        \[ -1 - i  = (-2i) + (-1+i) + 0 = 1*(-1+i)^2 + 1*(-1+i)^1 + 0*(-1+i)^0 =  (110)_{-1+i}\]
+
+        \item  a = -1, b = 0:
+        \begin{equation*}
+            \begin{split}
+                -1 + 0i  &= (-4) + (2+2i) + (-2i) + 0 + 1 \\
+                &= 1*(-1+i)^4 + 1*(-1+i)^3 + 1*(-1+i)^2 + 0*(-1+i)^1 \\
+                &+ 1*(-1+i)^0 \\
+                &=  (11101)_{-1+i}
+            \end{split}
+        \end{equation*}
+
+
+        \item a = -1, b = 1:
+        \[ -1 + i = (-1+i) + 0 = 1*(-1+i)^1 + 0*(-1+i)^0 =  (10)_{-1+i}\]
+
+        \item a = 0, b = -1:
+        \begin{equation*}
+            \begin{split}
+                0 + (-i)  &= (-2i) + (-1+i) + 1 = 1*(-1+i)^2 + 1*(-1+i)^1 + 1*(-1+i)^0 \\
+                &=  (111)_{-1+i}
+            \end{split}
+        \end{equation*}
+
+
+        \item a = 0, b = 0:
+        \[ 0 + 0i  = 0 = 0*(-1+i)^0 =  (0)_{-1+i}\]
+
+        \item a = 0, b = 1:
+        \[ 0 + i = (-1+i) + 1 = 1*(-1+i)^1 + 1*(-1+i)^0 =  (11)_{-1+i}\]
+
+        \item a = 1, b = -1:
+        \begin{equation*}
+            \begin{split}
+                1 - i &=(4 -4i) + (-4) + (2+2i) + 0 + (-1+i) + 0 \\
+                &= 1*(-1+i)^5 + 1*(-1+i)^4 + 1*(-1+i)^3 + 0*(-1+i)^2 \\
+                &+ 1*(-1+i)^1 + 0*(-1+i)^0 \\
+                &= (111010)_{-1+i}
+            \end{split}
+        \end{equation*}
+
+        \item a = 1, b = 0:
+        \[ 1 + 0i  = 1 = 1*(-1+i)^0 =  (1)_{-1+i}\]
+
+        \item a = 1, b = 1:
+        \begin{equation*}
+            \begin{split}
+                1 + i  &= (2+2i) + (-2i) + (-1+i) + 0 \\
+                &= 1*(-1+i)^3 + 1*(-1+i)^2 + 1*(-1+i)^1 + 0*(-1+i)^0 \\
+                &=  (1110)_{-1+i}
+            \end{split}
+        \end{equation*}
+
+    \end{enumerate}
+
+    \newpage
+
+    \subsection{Praktischer Teil:}
+
+    \subsubsection{to\_carthesian Methode (1. Variante)}
+    Am Anfang wollten wir mithilfe einer Maske und einer Schleife die Länge des Binärwerts  \textit{bm1pi}  \space ohne führenden Nullen berechnen aus Effizienz Gründen nicht ohne Grund jedes Mal die ganzen Ziffern der Zahl bis zum Ende durchiterieren.
+    Später haben wir aber diese Optimierung vom Code weggelassen, da diese mit der Optimierungsstufe -O3 schlechtere Performanz hatte als, wenn es nicht da gäbe.\newline
+
+    Nun wäre die intuitive Lösung, die Formel (\ref{sumFormel}) zu nutzen, aber um dies zu tun, mussten wir für jedes einzelne Bit in  \textit{bm1pi} , die 1 ist, $(-1+i)^{n}$ anhand seiner Position in der Zahl berechnen und anschließend alle miteinander addieren.
+    Das könnte aber unerwünscht die Effizienz unseres Codes stark verringern, weil die Potenzen von $(-1+i)$ neu berechnet werden müssen.
+    Damit wir weder Mathematik Bibliotheken noch Potenz Funktion nutzen müssen, haben wir die Entscheidung getroffen, die $(-1+i)^{n}$ für eine begrenzte Anzahl von Potenzen vorherzuberechnen und die restlichen durch ein Muster zusammenzusetzen.
+
+    Gemäß dem gefundenen Muster gibt es eine Relation zwischen jede achte Potenz vom $(-1+i)$ deswegen haben wir die eingegebene Zahl in Abschnitten der Länge 8 geteilt und in jeder Iteration überprüfen wir an jeder Stelle, ob die entsprechende Bit der Zahl gesetzt ist und falls ja, führen wir dem Muster nach die Berechnungen durch.
+
+    \subsubsection{to\_carthesian Methode (2. Variante)}
+    In dieser Variante verwenden wir eine Matrixmultiplikation, um die Konvertierung durchzuführen.
+    Die zwei vordefinierte Vektoren \textit{real\_row} und \textit{imag\_row} stellen die zeilen der Matrix dar.
+    Jeder Vektor enthält 8 Werte vom Typ \textit{int16\_t}, die die Koeffizienten für die Berechnung von Real- bzw. Imaginärteilen der komplexen Zahl repräsentieren.
+    Der Algorithmus verwendet eine Schleife, um die Bits des Eingabewerts \textit{bm1pi} zu extrahieren und in einer 2D-Array-Struktur \textit{bits} zu speichern.
+    Diese 2D-Array repräsentiert die Ziffern von \textit{bm1pi} in Form von einer 8x16-Matrix, wobei jede Spalte ein Byte von \textit{bm1pi} speichert.
+    (Siehe die mittlere Matrix in der nächsten Seite).
+
+    In der Hauptberechnungsschleife werden die Bytes in jeder Spalte der \textit{bits} Matrix mit den Vektoren \textit{real\_row} und \textit{imag\_row} multipliziert.
+    Dies wird durch die SIMD-Instruktionen \textit{\_mm\_madd\_epi16} (Multiply-Add) realisiert, die Multiplikationen und Additionen in einem Schritt durchzuführen.
+
+    Die Ergebnisse der Multiplikationen werden in den temporären Variablen \textit{temp\_real} und \textit{temp\_imag} gespeichert.
+    Dann werden die Ergebnisse in horizontaler Richtung summiert, indem die SIMD-Instruktion \textit{\_mm\_hadd\_epi32} (Horizontal Add) wiederholt aufgerufen wird.
+    \newpage
+    Der beschriebene Algorithmus kann durch die folgende Matrixgleichung erklärt werden:
+    \[
+        \newline
+        \begin{pmatrix}
+            1  & 0  \\
+            -1 & 1  \\
+            0  & -2 \\
+            2  & 2  \\
+            -4 & 0  \\
+            4  & -4 \\
+            0  & 8  \\
+            -8 & -8
+        \end{pmatrix}
+        ^{T}
+        \times
+        \begin{pmatrix}
+            a_0 & a_8    & \cdots & a_{120} \\
+            a_1 & a_9    & \cdots & a_{121} \\
+            a_2 & a_{10} & \cdots & a_{122} \\
+            a_3 & a_{11} & \cdots & a_{123} \\
+            a_4 & a_{12} & \cdots & a_{124} \\
+            a_5 & a_{13} & \cdots & a_{125} \\
+            a_6 & a_{14} & \cdots & a_{126} \\
+            a_7 & a_{15} & \cdots & a_{127}
+        \end{pmatrix}
+        \times
+        \begin{pmatrix}
+            2^0    \\
+            2^4    \\
+            2^8    \\
+            2^{12} \\
+            2^{16} \\
+            2^{20} \\
+            2^{24} \\
+            2^{28} \\
+            2^{32} \\
+            2^{36} \\
+            2^{40} \\
+            2^{44} \\
+            2^{48} \\
+            2^{52} \\
+            2^{56} \\
+            2^{60}
+        \end{pmatrix}
+        =
+        \begin{pmatrix}
+            \textit{Real} \\
+            \textit{Imag}
+        \end{pmatrix}
+    \]
+    \newline
+
+    Schließlich werden die Ergebnisse aus den temporären Variablen extrahiert und in die Ausgabe variablen \textit{real} und \textit{imag} akkumuliert.
+    Dabei werden die Zwischenwerte um eine bestimmte Anzahl von Bits (Potenzen von 16) verschoben und addiert.
+
+    Insgesamt führt der Code eine effiziente SIMD-basierte Matrixmultiplikation durch, um die Umwandlung einer komplexen Zahl in Basis $(-1+i)$ zu kartesische Koordinaten durchzuführen.
+
+    \subsubsection{to\_bm1pi Methode}
+    Diese Methode ist eine möglichst optimierte Implementierung vom Algorithmus, der ausführlich im theoretischen Teil des Lösungsansatzes, erklärt wurde.
+    Die Schleife läuft maximal 128-mal durch und in jeder Iteration wird ein Bit von \textit{result} berechnet.
+    Die Iterationen werden früher aufgehört, sobald die Zwischenwerte \textit{real} und \textit{imag} beide 0 werden.
+    Dies ist der Fall, wenn die ausgegebene Zahl führenden Nullen hat.
+
+    In der Schleife wird überprüft, ob beide \textit{real} und \textit{imag} gerade oder beide ungerade sind.
+    In diesem Fall ist der Rest der Division gleich 0 und damit auch das aktuelle Bit und die Werte von \textit{real} und \textit{imag} werden angepasst und durch eine Shiftoperation durch 2 geteilt.
+
+    Ansonsten sind sowohl (\textit{imag} - \textit{real}) als auch (- \textit{real} - \textit{imag}) ungerade Zahlen und der Rest der Division ist 1.
+    Deswegen tragen wir an der aktuellen Stelle in unserer \textit{result} Variable eine 1 ein, indem wir es mit der aktuelle bit Maske verodern und die Werte von \textit{real} und \textit{imag} werden angepasst und durch eine Shiftoperation durch 2 geteilt.
+
+    Nach jeder Iteration wird die Bitmaske mit 2 multipliziert damit man im nächsten Schritt, die nächste (linke) Stelle bearbeiten kann.
+
+    % DONE: Je nach Aufgabenstellung einen der Begriffe wählen
+
+
+    \section{Korrektheit}
+    Wir haben umfangreiche Tests für die Funktion \textit{to\_carthesian} durchgeführt und freuen uns, bekannt zu geben, dass die Implementierung erfolgreich funktioniert.
+    Die Funktion konvertiert eine gegebene Zahl im BM1PI-Format in die entsprechenden kartesischen Koordinaten.
+
+    Wir haben eine Vielzahl von Testfällen abgedeckt, darunter positive und negative Zahlen, verschiedene Kombinationen von Bits und verschiedene Längen von BM1PI-Zahlen.
+    In jedem Testfall wurde die Funktion aufgerufen, und die erhaltenen kartesischen Koordinaten wurden mit den erwarteten Werten verglichen.
+
+    Bei allen Tests hat die Implementierung den korrekten Ergebnissen geliefert.
+    Die berechneten kartesischen Koordinaten stimmten genau mit den erwarteten Werten überein.
+    Dies bestätigt, dass der Code korrekt implementiert worden ist.
+
+    Darüber hinaus wurden auch Spezialfälle wie die Konvertierung von null oder sehr großen BM1PI-Zahlen getestet.
+    Auch hier hat die Implementierung konsistente und korrekte Ergebnisse geliefert.
+
+    Die erfolgreichen Tests bestätigen, dass die Funktion \textit{to\_carthesian} zuverlässig arbeitet und die vorgegebenen Anforderungen erfüllt.
+
+    Außerdem kann man auch mit den Formeln, die schon in Einleitung und theoretischen Teil vom Lösungsansatz erwähnt wurden (Formel\ref{sumFormel}), die Korrektheit unserer Implementierung mathematisch beweisen.
+
+    Hier sind einige Beispiele und Testfälle mit den erwarteten Ergebnissen (laut der Berechnungen mit den mathematischen Formeln) und tatsächlich gelieferten Ergebnissen von der jeweiligen Methoden:
+
+    \subsection{to\_carthesian Methode}
+
+    \begin{enumerate}[label=\roman*)]
+        \item Eingabe: $0$ \quad Ausgabe: $0+0i$ \quad Erwartet: $0+0i$
+        \item Eingabe: $\smash[b]{\underbrace{111\cdots1}_{128 \text{ mal}}}$ \quad \quad \space Ausgabe: $-7378697629483820646-3689348814741910323i$ \vskip 0em \qquad \qquad \qquad  \qquad \qquad Erwartet: $-7378697629483820646-3689348814741910323i$
+        \item Eingabe: $00011101001$ \quad Ausgabe: $-1-2i$ \quad Erwartet: $-1-2i$
+        \item Eingabe: $\smash[b]{1\!\underbrace{000\cdots0}_{127 \text{ mal}}}$ \quad \quad Ausgabe:
+        $-9223372036854775808-9223372036854775808i$ \vskip 0em \qquad \qquad \qquad \qquad \qquad \space Erwartet: $-9223372036854775808-9223372036854775808i$
+    \end{enumerate}
+
+    \subsection{to\_bm1pi Methode}
+    \begin{enumerate}[label=\roman*)]
+        \item Eingabe: 0,0 \quad  Ausgabe: $0$ \quad Erwartet: $0$
+        \item Eingabe: 3,2 \quad Ausgabe: $1001$ \quad Erwartet: $1001$
+        \item Eingabe: 123456789,123456789 \newline Ausgabe: $111010000110011010001110000011101110111011100000111001101110$
+        \newline Erwartet: $111010000110011010001110000011101110111011100000111001101110$
+
+        \item Eingabe: -123456789,-123456789 \newline Ausgabe: $10001110100010000110000001100110011001100000011011100110$
+        \newline Erwartet:
+        $10001110100010000110000001100110011001100000011011100110$
+    \end{enumerate}
+
+
+    \section{Performanzanalyse}
+    Beide Varianten unserer \textit{to\_carthesian} Methode bestehen jeweils aus einer Schleife, die unabhängig von der Eingabegröße eine feste Anzahl von Iterationen (16-mal) ausgeführt werden.
+    Daher liegt die asysmptotische Laufzeitkomplexität bei \( \mathcal{O} \)(1).
+    Auch für die Methode \textit{to\_bm1pi }verwenden wir eine Schleife, die maximal 128 Mal durchzulaufen ist, da es sich um eine 128-Bit-Eingabe handelt.
+    Daraus folgt, dass die Worst-Case-Komplexität dieser Methode auch unabhängig von der Eingabegröße \( \mathcal{O} \)(1) ist.
+    Eine Übereinstimmung mit der tatsächlichen Laufzeit der Implementierungen wurde durch unsere Tests bestätigt.
+    \vspace{10pt} \newline
+    Getestet wurde auf einem System mit einem Intel i9-13900H Prozessor, 5.40GHz bei P-Cores und 4.10GHz bei E-Cores, 32 GB Arbeitsspeicher, Ubuntu 23.04, 64 Bit, Linux-Kernel 6.2.0-25-generic.
+    Kompiliert wurde mit GCC 12.2.0 mit der Option -O3 -msse4.1.
+    Die Berechnungen wurden für die Methode \textit{to\_carthesian} mit der größtmöglichen Eingabezahl, deren 128 Bits alle mit 1 gesetzt sind, mit verschiedenen Wiederholungen jeweils 15-mal durchgeführt und das arithmetische Mittel für jede Eingabegröße wurde in folgendes Diagram eingetragen:
+    \vspace{10pt}
+
+    \begin{center}
+        \begin{tikzpicture}
+
+            \begin{axis}[clip = false, xmin=0, xmax=110000000, ymin=0, ymax=13, xlabel=$Iterations\cdot10^7$, ylabel= Time in sec, axis lines=left, ymajorgrids = true, xmajorgrids = true,
+                grid style= dashed,
+                xticklabels={0,0,2,4,6,8,10},
+                scaled x ticks=false,
+                title={Laufzeitanalyse für to\_carthesian Methode}
+            ]
+                \addplot+[color = blue]table[x=Iter,y=carthesian_v0_sec]{test.txt}
+                node[right, pos=1]{to\_carthesian};
+                \addplot+[color=red]table[x=Iter,y=carthesian_v1_sec]{test.txt}node[right, pos=1]{to\_carthesian\_V1};
+            \end{axis}
+
+        \end{tikzpicture}
+    \end{center}
+
+    \begin{center}
+        \begin{tikzpicture}
+
+            \begin{axis}[clip = false, xmin=0, xmax=110000000, ymin=0, ymax=23, xlabel=$Iterations\cdot10^7$, ylabel= Time in sec, axis lines=left, ymajorgrids = true, xmajorgrids = true,
+                grid style= dashed,
+                xticklabels={0,0,2,4,6,8,10},
+                scaled x ticks=false,
+                title={Laufzeitanalyse für to\_bm1pi Methode}
+            ]
+                \addplot+[color = blue]table[x=Iter,y=bm1pi_sec]{test.txt}
+                node[right, pos=1]{to\_bm1pi};
+                %\addplot+[color=red]table[x=Iter,y=carthesian_v1_sec]{test.txt}node[right, pos=1]{to\_carthesian\_V1};
+            \end{axis}
+
+        \end{tikzpicture}
+    \end{center}
+
+
+    \section{Zusammenfassung und Ausblick}
+    Die vorliegende Arbeit befasst sich mit der Konversion von komplexen Zahlen zur Basis $(-1 + i)$.
+    Im theoretischen Teil wurden die Algorithmen zur Konversion sowohl in die eine als auch in die andere Richtung ausführlich beschrieben. \newline
+    Im praktischen Teil werden zwei Funktionen vorgestellt: \textit{to\_carthesian}, um eine Zahl im BM1PI-Format in kartesische Koordinaten umzuwandeln, und \textit{to\_bm1pi}, um eine komplexe Zahl in kartesischer Form in das BM1PI-Format zu konvertieren.
+    Die Implementierung wurde umfangreich getestet und lieferte korrekte Ergebnisse.
+    Es wurden zwei Varianten der Implementierung der \textit{to\_carthesian} präsentiert.
+    In Bezug auf die Methode \textit{to\_carthesian} haben wir für die erste Variante im Hintergrund die Formel(\ref{sumFormel}) in Verwendung genommen.
+    Die zweite Variante verwendet SIMD-Instruktionen, die durch gleichzeitige Berechnungen, zu einer erheblichen Beschleunigung führen. \newline
+    In der Implementierung der Methode \textit{to\_bm1pi} haben wir die Zahl wiederholt durch die Basis geteilt und die Reste notiert, wie es im theoretischen Teil des Lösungsansatzes ausführlich beschrieben wurde.
+    Mit Valgrind wurde nach mögliche Memory Fehlern überprüft, was aber bei uns nicht der Fall war.
+    Anschließend haben wir mittels profiling tools das Verhalten während der Ausführung untersucht und anhand dessen Optimierungen durchgeführt.
+
+% DONE: Fuegen Sie Ihre Quellen der Datei Ausarbeitung.bib hinzu
+% Referenzieren Sie diese dann mit \cite{}.
+% Beispiel: CR2 ist ein Register der x86-Architektur~\cite{intel2017man}.
+
+    \bibliographystyle{plain}
+    \bibliography{Ausarbeitung.bib}
+
+
+\end{document}
